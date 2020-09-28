@@ -1,13 +1,80 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JSMarathon</title>
-    <link rel="stylesheet" href="style.css">
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Pokemon Fight</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="body">
+      <header>
+        <img
+          class="logo"
+          title="Reset Game"
+          src="./assets/Pokemon_logo.png"
+          alt="Pokemon"
+        />
+      </header>
+      <div class="playground">
+        <div class="pokemon character">
+          <span class="lvl">Lv. 1</span>
 
-  <script src="main.js"></script>
+          <img
+            src="http://sify4321.000webhostapp.com/pikachu.png"
+            class="sprite"
+          />
+
+          <div class="details">
+            <h2 class="name" id="name-character">Pikachu</h2>
+            <div class="hp">
+              <div class="bar">
+                <div
+                  class="health"
+                  id="progressbar-character"
+                  style="width: 100%"
+                ></div>
+              </div>
+              <span class="text" id="health-character">100 / 100</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="control">
+          <button class="button" id="btn-kick">Thunder Jolt</button>
+          <button class="button" id="btn-kick2">Roundhouse kick</button>
+        </div>
+
+        <div class="pokemon enemy">
+          <span class="lvl">Lv. 1</span>
+
+          <img
+            src="http://sify4321.000webhostapp.com/charmander.png"
+            class="sprite"
+          />
+
+          <div class="details">
+            <h2 class="name" id="name-enemy">Charmander</h2>
+            <div class="hp">
+              <div class="bar">
+                <div
+                  class="health"
+                  id="progressbar-enemy"
+                  style="width: 100%"
+                ></div>
+              </div>
+              <span class="text" id="health-enemy">100 / 100</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="catch_screen"></div>
+
+    <script src="main.js"></script>
   </body>
 </html>
