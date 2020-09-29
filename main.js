@@ -5,62 +5,70 @@ const btn2 = document.getElementById("btn-kick2");
 
 const character = {
   name: "Pikachu",
-  defaultHp: 100,
-  damage: 100,
+  defaultHp: 200,
+  damage: 200,
   elHp: document.getElementById("health-character"),
   elProgressbar: document.getElementById("progressbar-character"),
+  renderHP: renderHP,
+  renderHPLife: renderHPLife,
+  renderProgressbarHP: renderProgressbarHP,
+  changeHP: changeHP,
 };
 
 const enemy = {
   name: "Charmander",
-  defaultHp: 100,
-  damage: 100,
+  defaultHp: 350,
+  damage: 350,
   elHp: document.getElementById("health-enemy"),
   elProgressbar: document.getElementById("progressbar-enemy"),
+  renderHP: renderHP,
+  renderHPLife: renderHPLife,
+  renderProgressbarHP: renderProgressbarHP,
+  changeHP: changeHP,
 };
 
 btn.addEventListener("click", function () {
   console.log("Thunder jolt");
-  changeHP(random(20), character);
-  changeHP(random(20), enemy);
+  character.changeHP(random(20));
+  enemy.changeHP(random(20));
 });
 
 btn2.addEventListener("click", function () {
   console.log("Roundhouse kick");
-  changeHP(random(5), character);
-  changeHP(random(5), enemy);
+  character.changeHP(random(5));
+  enemy.changeHP(random(5));
 });
 
 function init() {
   console.log("Start game!");
-  renderHP(character);
-  renderHP(enemy);
+  character.renderHP();
+  enemy.renderHP();
 }
 
-function renderHP(person) {
-  renderHPLife(person);
-  renderProgressbarHP(person);
+function renderHP() {
+  this.renderHPLife();
+  this.renderProgressbarHP();
 }
 
-function renderHPLife(person) {
-  person.elHp.innerText = `${person.damage}/${person.defaultHp}`;
+function renderHPLife() {
+  this.elHp.innerText = `${this.damage}/${this.defaultHp}`;
 }
 
-function renderProgressbarHP(person) {
-  person.elProgressbar.style.width = `${person.damage}%`;
+function renderProgressbarHP() {
+  this.elProgressbar.style.width = this.damage / this.defaultHp * 100 + '%';
 }
 
-function changeHP(count, person) {
-  if (person.damage < count) {
-    person.damage = 0;
-    alert(`Бедный ${person.name} проиграл!`);
+function changeHP(count) {
+  if (this.damage < count) {
+    this.damage = 0;
+    alert(`Бедный ${this.name} проиграл!`);
     btn.disabled = true;
     btn2.disabled = true;
   } else {
-    person.damage -= count;
+    this.damage -= count;
   }
 
-  renderHP(person);
+  this.renderHP();
 }
 
 function random(num) {
