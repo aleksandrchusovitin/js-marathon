@@ -4,8 +4,24 @@ function getElById(id) {
   return document.getElementById(id);
 }
 
+function getCountKick(btn) {
+  let count = 0;
+  let btnContent = btn.textContent;
+
+  return function () {
+    count++;
+    btn.innerText = '';
+    btn.innerText = `${btnContent} ${count}/6`;
+    if (count >= 6) btn.disabled = true;
+    return count;
+  };
+}
+
 const btn = getElById("btn-kick");
 const btn2 = getElById("btn-kick2");
+
+let countKickBtn = getCountKick(btn);
+let countKickBtn2 = getCountKick(btn2);
 
 const character = {
   name: "Pikachu",
@@ -32,15 +48,19 @@ const enemy = {
 };
 
 btn.addEventListener("click", function () {
-  console.log("Thunder jolt");
   character.changeHP(random(20));
   enemy.changeHP(random(20));
+
+  let kicks = countKickBtn();
+  console.log(`Thunder jolt был использован: ${kicks} раз`);
+
 });
 
 btn2.addEventListener("click", function () {
-  console.log("Roundhouse kick");
   character.changeHP(random(5));
   enemy.changeHP(random(5));
+
+  console.log('Roundhouse kick был использован : ' + countKickBtn2() + ' раз');
 });
 
 function init() {
@@ -83,9 +103,7 @@ function changeHP(count) {
   this.renderHP();
 }
 
-function random(num) {
-  return Math.ceil(Math.random() * num);
-}
+const random = (num) => Math.ceil(Math.random() * num);
 
 function generateLog(firstPerson, secondPerson, damage) {
   const progressBarDefendPerson = `[${firstPerson.damage}/${firstPerson.defaultHp}]`;
