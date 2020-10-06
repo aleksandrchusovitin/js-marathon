@@ -1,18 +1,42 @@
 "use strict";
+import Pokemon from "./pokemon.js";
+import random from "./utils.js";
+
+const player1 = new Pokemon({
+  name: 'Pikachu',
+  hp: 500,
+  type: 'electric',
+  selectors: 'character',
+});
+
+const player2 = new Pokemon({
+  name: 'Charmander',
+  hp: 450,
+  type: 'fire',
+  selectors: 'enemy',
+});
+
+function showLog(log) {
+  const logElement = document.createElement('p');
+  logElement.innerText = log;
+
+  const logs = document.querySelector('.logs');
+  logs.insertBefore(logElement, logs.children[0]);
+}
 
 function getElById(id) {
   return document.getElementById(id);
 }
 
-function getCountKick(btn) {
-  let count = 0;
-  let btnContent = btn.textContent;
+function countBtn(count = 6, el) {
+  const total = count;
+  const innerText = el.innerText;
+  el.innerText = `${innerText} (${count}/${total})`;
 
   return function () {
-    count++;
-    btn.innerText = '';
-    btn.innerText = `${btnContent} ${count}/6`;
-    if (count >= 6) btn.disabled = true;
+    count--;
+    el.innerText = `${innerText} (${count}/${total})`;
+    if (count === 0) el.disabled = true;
     return count;
   };
 }
@@ -20,93 +44,34 @@ function getCountKick(btn) {
 const btn = getElById("btn-kick");
 const btn2 = getElById("btn-kick2");
 
-let countKickBtn = getCountKick(btn);
-let countKickBtn2 = getCountKick(btn2);
-
-const character = {
-  name: "Pikachu",
-  defaultHp: 200,
-  damage: 200,
-  elHp: getElById("health-character"),
-  elProgressbar: getElById("progressbar-character"),
-  renderHP,
-  renderHPLife,
-  renderProgressbarHP,
-  changeHP,
-};
-
-const enemy = {
-  name: "Charmander",
-  defaultHp: 350,
-  damage: 350,
-  elHp: getElById("health-enemy"),
-  elProgressbar: getElById("progressbar-enemy"),
-  renderHP,
-  renderHPLife,
-  renderProgressbarHP,
-  changeHP,
-};
-
+let btnCountJolt = countBtn(6, btn);
 btn.addEventListener("click", function () {
-  character.changeHP(random(20));
-  enemy.changeHP(random(20));
-
-  let kicks = countKickBtn();
-  console.log(`Thunder jolt был использован: ${kicks} раз`);
-
+  btnCountJolt();
+  player1.changeHP(random(60, 20), function (count) {
+    console.log('Some change after change HP ' + count);
+    showLog(generateLog(player1, player2, count));
+  });
+  player2.changeHP(random(60, 20), function (count) {
+    console.log('Some change after change HP ' + count);
+    showLog(generateLog(player2, player1, count));
+  });
 });
 
+let btnCountRoundhouse = countBtn(10, btn2);
 btn2.addEventListener("click", function () {
-  character.changeHP(random(5));
-  enemy.changeHP(random(5));
-
-  console.log('Roundhouse kick был использован : ' + countKickBtn2() + ' раз');
+  btnCountRoundhouse();
+  player1.changeHP(random(10), function (count) {
+    console.log('Some change after change HP ' + count);
+    showLog(generateLog(player1, player2, count));
+  });
+  player2.changeHP(random(10), function (count) {
+    console.log('Some change after change HP ' + count);
+    showLog(generateLog(player2, player1, count));
+  });
 });
-
-function init() {
-  console.log("Start game!");
-  character.renderHP();
-  enemy.renderHP();
-}
-
-function renderHP() {
-  this.renderHPLife();
-  this.renderProgressbarHP();
-}
-
-function renderHPLife() {
-  this.elHp.innerText = `${this.damage}/${this.defaultHp}`;
-}
-
-function renderProgressbarHP() {
-  this.elProgressbar.style.width = this.damage / this.defaultHp * 100 + '%';
-}
-
-function changeHP(count) {
-  this.damage -= count;
-
-  const log = this === enemy ? generateLog(this, character, count) : generateLog(this, enemy, count);
-
-  const logElement = document.createElement('p');
-  logElement.innerText = log;
-
-  const logs = document.querySelector('.logs');
-  logs.insertBefore(logElement, logs.children[0]);
-
-  if (this.damage <= 0) {
-    this.damage = 0;
-    alert(`Бедный ${this.name} проиграл!`);
-    btn.disabled = true;
-    btn2.disabled = true;
-  }
-
-  this.renderHP();
-}
-
-const random = (num) => Math.ceil(Math.random() * num);
 
 function generateLog(firstPerson, secondPerson, damage) {
-  const progressBarDefendPerson = `[${firstPerson.damage}/${firstPerson.defaultHp}]`;
+  const progressBarDefendPerson = `[${firstPerson.hp.current}/${firstPerson.hp.total}]`;
   const logs = [
     `${firstPerson.name} вспомнил что-то важное, но неожиданно ${secondPerson.name}, не помня себя от испуга, ударил в предплечье врага. -${damage} HP ${firstPerson.name}:${progressBarDefendPerson}`,
     `${firstPerson.name} поперхнулся, и за это ${secondPerson.name} с испугу приложил прямой удар коленом в лоб врага. -${damage} HP ${firstPerson.name}:${progressBarDefendPerson}`,
@@ -123,5 +88,3 @@ function generateLog(firstPerson, secondPerson, damage) {
 
   return logs[random(logs.length) - 1];
 }
-
-init();
