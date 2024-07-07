@@ -44,6 +44,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 60px;
 }
 
 .playground {
@@ -619,7 +621,7 @@ h1 {
 }
 
 .logs {
-  margin: 10px auto;
+  margin: 30px auto;
   width: 60%;
   height: 300px;
   overflow: scroll;
